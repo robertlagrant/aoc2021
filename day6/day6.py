@@ -3,7 +3,7 @@ from collections import Counter
 from raw_input import raw_input
 
 
-def count_ages(days: int, start_model):
+def count_ages(days, start_model):
     c = Counter(start_model)
 
     for _ in range(days):
