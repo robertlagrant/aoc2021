@@ -12,5 +12,5 @@ def count_ages(days: int, start_model):
     return c
 
 
-print(f"Part 1: {sum(count for count in count_ages(80, start_model=raw_input).values())}")
-print(f"Part 2: {sum(count for count in count_ages(256, start_model=raw_input).values())}")
+print(f"Part 1: {sum(count_ages(80, start_model=raw_input).values())}")
+print(f"Part 2: {sum(count_ages(256, start_model=raw_input).values())}")
