@@ -1,4 +1,3 @@
-from functools import cache
 from raw_input import raw_input
 
 
@@ -9,4 +8,4 @@ def calculate_min_fuel(cost_function):
 
 
 print(f"Part 1: {calculate_min_fuel(lambda x: x)}")
-print(f"Part 2: {calculate_min_fuel(cache((lambda x: sum(i + 1 for i, d in enumerate(range(x))))))}")
+print(f"Part 2: {calculate_min_fuel(lambda x: int(x*(x+1)/2))}")
