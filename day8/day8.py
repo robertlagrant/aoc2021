@@ -1,14 +1,12 @@
 from raw_input import raw_input
 
-SORT_ORDER = {count: priority for priority, count in enumerate([2, 3, 4, 7, 5, 6])}
-
 lines = raw_input.split("\n")
 
 
-def parse_line(line):
-    ins = [frozenset(word) for word in line.split(" | ")[0].split(" ")]
-    outs = [frozenset(word) for word in line.split(" | ")[1].split(" ")]
-    ins.sort(key=lambda x: SORT_ORDER[len(x)])
+def process_line(line, f):
+    ins, outs = map(lambda i: [frozenset(word) for word in line.split(" | ")[i].split(" ")], [0, 1])
+    ins.sort(key=lambda x: {c: p for p, c in enumerate([2, 3, 4, 7, 5, 6])}[len(x)])
+
     defs = {ins[x]: y for x, y in zip([0, 1, 2, 3], [1, 7, 4, 8])}
     bd = ins[2] - ins[0]
     for i, lenny in map(lambda x: (x, len(x)), ins):
@@ -27,8 +25,9 @@ def parse_line(line):
             else:
                 defs[i] = 6
 
-    return defs, outs
+    return f(defs, outs)
 
 
-print(f"Part 1: {sum(1 for line in lines for out in parse_line(line)[1] if len(out) in (2, 4, 3, 7))}")
-print(f"Part 2: {sum(int(''.join(str(parse_line(line)[0][o]) for o in parse_line(line)[1])) for line in lines)}")
+print(f"Part 1: {sum(process_line(l, lambda _, outs: sum(1 for o in outs if len(o) in (2, 4, 3, 7))) for l in lines)}")
+print(f"Part 2: {sum(process_line(l, lambda defs, outs: int(''.join(str(defs[o]) for o in outs)) ) for l in lines)}")
+
