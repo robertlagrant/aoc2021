@@ -4,15 +4,13 @@ SORT_ORDER = {count: priority for priority, count in enumerate([2, 3, 4, 7, 5, 6
 
 lines = raw_input.split("\n")
 
-total = 0
 
-for line in lines:
+def parse_line(line):
     ins = [frozenset(word) for word in line.split(" | ")[0].split(" ")]
     outs = [frozenset(word) for word in line.split(" | ")[1].split(" ")]
     ins.sort(key=lambda x: SORT_ORDER[len(x)])
     defs = {ins[x]: y for x, y in zip([0, 1, 2, 3], [1, 7, 4, 8])}
     bd = ins[2] - ins[0]
-
     for i, lenny in map(lambda x: (x, len(x)), ins):
         if lenny == 5:
             if bd < i:
@@ -29,18 +27,8 @@ for line in lines:
             else:
                 defs[i] = 6
 
-    total += int("".join(str(defs[o]) for o in outs))
+    return defs, outs
 
 
-print(
-    "Part 1: "
-    + str(
-        sum(
-            1
-            for line in lines
-            for output in line.split(" | ")[1].split()
-            if len(output) in (2, 4, 3, 7)
-        )
-    )
-)
-print(f"Part 2: {total}")
+print(f"Part 1: {sum(1 for line in lines for out in parse_line(line)[1] if len(out) in (2, 4, 3, 7))}")
+print(f"Part 2: {sum(int(''.join(str(parse_line(line)[0][o]) for o in parse_line(line)[1])) for line in lines)}")
