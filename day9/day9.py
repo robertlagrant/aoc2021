@@ -17,7 +17,7 @@ def pool(low):
 
     while todo and (_next := todo.pop()):
         done.add(_next)
-        todo = (todo | set((y, x) for y, x in near(*_next) if R[y][x] != 9)) - done
+        todo |= set((y, x) for y, x in near(*_next) if R[y][x] != 9) - done
 
     return done
 
