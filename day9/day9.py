@@ -17,12 +17,11 @@ def pool(low):
 
     while todo and (_next := todo.pop()):
         done.add(_next)
+        yield _next
         todo |= set((y, x) for y, x in near(*_next) if R[y][x] != 9) - done
-
-    return done
 
 
 lows = set((y, x) for y, x in product(range(MAX_Y), range(MAX_X)) if all(R[y][x] < R[_y][_x] for _y, _x in near(y, x)))
 
 print(f"Part 1: {sum(1 + R[y][x] for y, x in lows)}")
-print(f"Part 2: {prod(sorted(map(len, [pool(l) for l in lows]))[-3:])}")
+print(f"Part 2: {prod(sorted(map(len, [list(pool(l)) for l in lows]))[-3:])}")
