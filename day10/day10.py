@@ -5,19 +5,18 @@ from raw_input import raw_input
 BAROQUE_INFO = [("()", 3, 1), ("[]", 57, 2), ("{}", 1197, 3), ("<>", 25137, 4)]
 PAIRS = {tokens[1]: tokens[0] for tokens, _, _ in BAROQUE_INFO}
 RPAIRS = {b: a for a, b in PAIRS.items()}
-SEVERITY = {tokens[1]: score1 for tokens, score1, _ in BAROQUE_INFO}
-SCORES = {tokens[1]: score2 for tokens, _, score2 in BAROQUE_INFO}
+SCORES = {tokens[1]: (score1, score2) for tokens, score1, score2 in BAROQUE_INFO}
 
 
 def analyse_line(_line, _type):
     current, corrupt = "", False
     for c in _line:
         if (corrupt := corrupt or (c in PAIRS.keys() and current[-1] != PAIRS[c])) and _type == 1:
-            return SEVERITY[c]
+            return SCORES[c][0]
         current = current + c if c in PAIRS.values() else current[:-1]
 
     if not corrupt and current and _type == 2:
-        return reduce(lambda x, y: (x * 5) + SCORES[y], "".join(RPAIRS[c] for c in reversed(current)), 0)
+        return reduce(lambda x, y: (x * 5) + SCORES[y][1], "".join(RPAIRS[c] for c in reversed(current)), 0)
 
 
 lines = raw_input.split("\n")
