@@ -10,15 +10,14 @@ SCORES = {tokens[1]: score2 for tokens, _, score2 in BAROQUE_INFO}
 
 
 def analyse_line(_line, _type):
-    current_open, line_corrupt = "", False
+    current, corrupt = "", False
     for c in _line:
-        line_corrupt = line_corrupt or (c in PAIRS.keys() and current_open[-1] != PAIRS[c])
-        if line_corrupt and _type == 1:
+        if (corrupt := corrupt or (c in PAIRS.keys() and current[-1] != PAIRS[c])) and _type == 1:
             return SEVERITY[c]
-        current_open = current_open + c if c in PAIRS.values() else current_open[:-1]
+        current = current + c if c in PAIRS.values() else current[:-1]
 
-    if not line_corrupt and current_open and _type == 2:
-        return reduce(lambda x, y: (x * 5) + SCORES[y], "".join(RPAIRS[c] for c in reversed(current_open)), 0)
+    if not corrupt and current and _type == 2:
+        return reduce(lambda x, y: (x * 5) + SCORES[y], "".join(RPAIRS[c] for c in reversed(current)), 0)
 
 
 lines = raw_input.split("\n")
