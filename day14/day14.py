@@ -1,5 +1,6 @@
 from collections import Counter
 from functools import cache, reduce
+from itertools import pairwise
 
 from raw_input import raw
 
@@ -16,8 +17,11 @@ def expand(_in: str, its: int) -> Counter:
         _in = RULES[_in]
         its -= 1
 
-    return reduce(lambda c1, c2: c1 + c2, [expand(_in[j:j+2], its) for j in range(len(_in) - 1)])
+    return reduce(
+        lambda c, d: c + d,
+        [expand(_in[j:j+2], its) for j in range(len(_in) - 1)]
+    )
 
 
-print(f"Part 1: {(c := [b for a, b in (expand(HULL, 10) + Counter(HULL[-1])).most_common()])[0] - c[-1]}")
-print(f"Part 2: {(c := [b for a, b in (expand(HULL, 40) + Counter(HULL[-1])).most_common()])[0] - c[-1]}")
+print(f"Part 1: {(c := [b for _, b in (expand(HULL, 10) + Counter(HULL[-1])).most_common()])[0] - c[-1]}")
+print(f"Part 2: {(c := [b for _, b in (expand(HULL, 40) + Counter(HULL[-1])).most_common()])[0] - c[-1]}")
