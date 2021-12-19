@@ -32,9 +32,7 @@ def explode(s):
 
 def split(s):
     if m := re.search(r"(\d\d+)", s):
-        low = int(m.groups()[0])//2
-        high = (int(m.groups()[0])+1)//2
-        return f"{s[0:m.start()]}[{low},{high}]{s[m.end():]}"
+        return f"{s[0:m.start()]}[{(val := int(m.groups()[0]))//2},{(val+1)//2}]{s[m.end():]}"
     return s
 
 
