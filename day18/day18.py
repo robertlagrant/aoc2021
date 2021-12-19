@@ -9,12 +9,12 @@ def explode(s):
     i, depth, exploded = 0, 0, False
     while i < len(s) and not exploded:
         inc = 1
-        if m := re.match(r"\[(?P<n1>\d+),(?P<n2>\d+)\]", s[i:]):
+        if m := re.match(r"\[(?P<n1>\d+),(?P<n2>\d+)]", s[i:]):
             if exploded := depth >= 4:  # explode
                 s = s[:i] + "0" + s[i + m.end():]  # snip out the exploded bit, replace with "0"
                 if n1_m := re.findall(r"(\d+)", s[:i]):  # Search back to find a place for the left num, else discard
                     prev_len = len(s)
-                    s = s[:s[:i].rfind(n := n1_m[-1])] + str(int(n) + int(m.groupdict()["n1"])) + s[s[:i].rfind(n) + len(n):]
+                    s = s[:(r := s[:i].rfind(n := n1_m[-1]))] + str(int(n) + int(m.groupdict()["n1"])) + s[r + len(n):]
                     i += len(s) - prev_len
 
                 i += 1  # Skip the 0
