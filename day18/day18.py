@@ -1,16 +1,31 @@
+import re
+
 from test_input import raw
 
 
-class Node:
-    def __init__(self, raw_node):
-        self.left = raw_node[0] if type(raw_node[0]) == int else Node(raw_node[0])
-        self.right = raw_node[1] if type(raw_node[1]) == int else Node(raw_node[1])
+SIMPLE_MATCH = r"\[(?P<n1>\d+),(?P<n2>\d+)\]"
+needs_rerun = True
+while needs_rerun:
+    print(raw)
+    needs_rerun = False
+    i = 0
+    counter = 0
+    while i < len(raw):
+        inc = 1
+        if m := re.match(SIMPLE_MATCH, raw[i:]):
+            if counter >= 4:
+                ...  # explode
+            else:
+                inc = m.end()  # skip past the simple match
+            # elif int(m.groupdict()["n1"]) > 9:
+            #     ...  # split left
+            # elif int(m.groupdict()["n2"]) > 9:
+            #     ...  # split right
+        elif raw[i] == "[":
+            counter += 1
+        elif raw[i] == "]":
+            counter -= 1
 
-    def __repr__(self):
-        return f"Node({self.left}, {self.right})"
+        i += inc
 
 
-for line in raw.split("\n"):
-    root = Node(eval(line))
-
-    print(line, root)
