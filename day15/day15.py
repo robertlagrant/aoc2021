@@ -2,30 +2,29 @@ import networkx as nx
 
 from raw_input import raw
 
-ROWS = [[int(c) for c in r] for r in raw.split("\n")]
-
 
 def generate_square_map(tile, num_tiles=1):
     side = len(tile)
     return [
-        [(n if (n := tile[row_i % side][col_i % side] + (row_i // side) + (col_i // side)) <= 9 else n - 9)
-         for col_i in range(side * num_tiles)]
-        for row_i in range(side * num_tiles)
+        [(n if (n := tile[r_i % side][c_i % side] + (r_i // side) + (c_i // side)) <= 9 else n - 9)
+         for c_i in range(side * num_tiles)]
+        for r_i in range(side * num_tiles)
     ]
 
 
 def shortest_route(tile):
     g = nx.DiGraph()
-    for row in range((side := len(tile) - 1) + 1):
-        for col in range(side + 1):
-            if col != side:
-                g.add_edge((col + 1, row), (col, row), weight=tile[row][col])
-                g.add_edge((col, row), (col + 1, row), weight=tile[row][col + 1])
-            if row != side:
-                g.add_edge((col, row), (col, row + 1), weight=tile[row + 1][col])
-                g.add_edge((col, row + 1), (col, row), weight=tile[row][col])
-    return nx.shortest_path_length(g, (0, 0), (side, side), weight="weight")
+    for r in range(side := len(tile)):
+        for c in range(side):
+            if c != side - 1:
+                g.add_edge((c + 1, r), (c, r), weight=tile[r][c])
+                g.add_edge((c, r), (c + 1, r), weight=tile[r][c + 1])
+            if r != side - 1:
+                g.add_edge((c, r), (c, r + 1), weight=tile[r + 1][c])
+                g.add_edge((c, r + 1), (c, r), weight=tile[r][c])
+    return nx.shortest_path_length(g, (0, 0), (side - 1, side - 1), weight="weight")
 
 
-print(f"Part 1: {shortest_route(generate_square_map(ROWS, 1))}")
-print(f"Part 2: {shortest_route(generate_square_map(ROWS, 5))}")
+ROWS = [[int(c) for c in r] for r in raw.split("\n")]
+print(f"Part 1: {shortest_route(generate_square_map(ROWS))}")
+print(f"Part 2: {shortest_route(generate_square_map(ROWS, num_tiles=5))}")
