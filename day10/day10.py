@@ -1,6 +1,6 @@
 from functools import reduce
 
-from raw_input import raw_input
+from test_input import raw_input
 
 PAIRS, RPAIRS = [{cs[a]: cs[b] for cs in ["()", "[]", "{}", "<>"]} for a, b in [(1, 0), (0, 1)]]
 SCORES = {")": (3, 1), "]": (57, 2), "}": (1197, 3), ">": (25137, 4)}
@@ -19,3 +19,5 @@ def analyse_line(_line, mode):
 lines = raw_input.split("\n")
 print(f"Part 1: {sum(a for l in lines if (a := analyse_line(l, mode=1)))}")
 print(f"Part 2: {sorted(scores := [a for l in lines if (a := analyse_line(l, mode=2))])[len(scores)//2]}")
+
+print(f"Part 1: {sum(reduce(lambda d, c: (d[0] + c if c in PAIRS.values() else d[0][:-1], d[1] if d[1] else SCORES[c][0] if c in PAIRS.keys() and d[0][-1] != PAIRS[c] else 0), l, ('', 0))[1] for l in lines)}")
